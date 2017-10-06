@@ -8,9 +8,13 @@ void setup() {
 }
 
 void loop() {
-  int left_horisontal = analogRead(A1);
-  int left_vertical = analogRead(A2);
-  Serial.print(left_horisontal - left_horisontal_neutral);
+  int left_horisontal = analogRead(A1) - left_horisontal_neutral;
+  int left_vertical = analogRead(A2) - left_vertical_neutral;
+  
+  int left_belt = -left_vertical + left_horisontal;
+  int right_belt = -left_vertical - left_horisontal;
+  
+  Serial.print(left_belt);
   Serial.print(' ');
-  Serial.println(left_vertical - left_vertical_neutral);
+  Serial.println(right_belt);
 }
