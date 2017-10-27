@@ -9,9 +9,13 @@ TrollBot Motor(01, 050);
 
 //Slave pins
 int motorPins[2] = {5, 6};
+int statusPin = 7;
 
-int left_horisontal_neutral;
-int left_vertical_neutral;
+int stickLeftNeutral;
+int stickRightNeutral;
+int stickLeftAbsMax;
+int stickRightAbsMax;
+
 
 const int BELT_RIGHT_FORWARD = 2;
 const int BELT_RIGHT_BACKWARD = 1;
@@ -22,8 +26,16 @@ const int BELT_LEFT_PWM = 6;
 
 void setup() {
   Serial.begin(9600);
-  left_horisontal_neutral = analogRead(A1);
-  left_vertical_neutral = analogRead(A2);
+  stickLeftNeutral = analogRead(A2);
+  stickRightNeutral = analogRead(A5);
+  stickLeftAbsMax = min(stickLeftNeutral, 1024-stickLeftNeutral);
+  stickRightAbsMax = min(stickRightNeutral, 1024-stickRightNeutral);
+
+  Serial.print(stickLeftAbsMax);
+  Serial.print(' ');
+  Serial.println(stickRightAbsMax);
+
+  pinMode(statusPin, OUTPUT);
 
   Master.setup();
   //Slave setup
@@ -36,47 +48,53 @@ void setup() {
   Motor.pinMode(BELT_LEFT_FORWARD, OUTPUT);
   Motor.pinMode(BELT_LEFT_BACKWARD, OUTPUT);
   Motor.pinMode(BELT_LEFT_PWM, OUTPUT);
-  Motor.pinMode(7, OUTPUT);
-  pinMode(7, OUTPUT);
+  Motor.pinMode(statusPin, OUTPUT);
+
 }
 
 void loop() {
   Master.masterLoop();
 
-  Motor.digitalWrite(7, HIGH);
-  digitalWrite(7, HIGH);
+  Motor.digitalWrite(statusPin, HIGH);
+  digitalWrite(statusPin, HIGH);
 
-  int left_horisontal = analogRead(A1) - left_horisontal_neutral;
-  int left_vertical = analogRead(A2) - left_vertical_neutral;
+  int stickLeft = analogRead(A2) - stickLeftNeutral;
+  int stickRight = analogRead(A5) - stickRightNeutral;
 
-  int left_belt = min(abs(-left_vertical + left_horisontal), 510)/2;
-  int right_belt = min(abs(-left_vertical - left_horisontal), 510)/2;
-
-  Serial.print(left_belt);
+  Serial.print(stickLeft);
   Serial.print(' ');
-  Serial.println(right_belt);
+  Serial.println(stickRight);
 
-  Motor.analogWrite(BELT_RIGHT_PWM, right_belt);
-  Motor.digitalWrite(BELT_RIGHT_FORWARD, HIGH);
-  Motor.digitalWrite(BELT_RIGHT_BACKWARD, LOW);
-  Motor.analogWrite(BELT_LEFT_PWM, left_belt);
-  Motor.digitalWrite(BELT_LEFT_FORWARD, HIGH);
-  Motor.digitalWrite(BELT_LEFT_BACKWARD, LOW);
-}
+  int leftBelt = map(constrain(abs(stickLeft), 0, stickLeftAbsMax), 0, stickLeftAbsMax, 0, 255);
+  int rightBelt = map(constrain(abs(stickRight), 0, stickRightAbsMax), 0, stickRightAbsMax, 0, 255);
+  
+  Serial.print(leftBelt);
+  Serial.print(' ');
+  Serial.println(rightBelt);
 
-//Define custom functions for motor control
-void slaveMotor(bool dir) {
-  if (dir) {
-    // Control pins on the slave named "Motor"
-    Motor.digitalWrite(motorPins[0], HIGH);
-    Motor.digitalWrite(motorPins[1], LOW);
-  } else {
-    Motor.digitalWrite(motorPins[0], LOW);
-    Motor.digitalWrite(motorPins[1], HIGH);
+  if (stickLeft > 20) {
+    Motor.digitalWrite(BELT_LEFT_FORWARD, HIGH);
+    Motor.digitalWrite(BELT_LEFT_BACKWARD, LOW);
   }
-}
+  else if (stickLeft < -20) {
+    Motor.digitalWrite(BELT_LEFT_FORWARD, LOW);
+    Motor.digitalWrite(BELT_LEFT_BACKWARD, HIGH);
+  } else {
+    Motor.digitalWrite(BELT_LEFT_FORWARD, LOW);
+    Motor.digitalWrite(BELT_LEFT_BACKWARD, LOW);
+  }
+  
+  if (stickRight > 20) {
+    Motor.digitalWrite(BELT_RIGHT_FORWARD, HIGH);
+    Motor.digitalWrite(BELT_RIGHT_BACKWARD, LOW);
+  } else if (stickRight < -20) {
+    Motor.digitalWrite(BELT_RIGHT_FORWARD, LOW);
+    Motor.digitalWrite(BELT_RIGHT_BACKWARD, HIGH);
+  } else {
+    Motor.digitalWrite(BELT_RIGHT_FORWARD, LOW);
+    Motor.digitalWrite(BELT_RIGHT_BACKWARD, LOW);
+  }
 
-void slaveMotorOff() {
-  Motor.digitalWrite(motorPins[0], LOW);
-  Motor.digitalWrite(motorPins[1], LOW);
+  Motor.analogWrite(BELT_RIGHT_PWM, rightBelt);
+  Motor.analogWrite(BELT_LEFT_PWM, leftBelt);
 }
