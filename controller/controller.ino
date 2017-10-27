@@ -65,18 +65,18 @@ void loop() {
   Serial.print(' ');
   Serial.println(stickRight);
 
-  int leftBelt = map(constrain(abs(stickLeft), 0, stickLeftAbsMax), 0, stickLeftAbsMax, 0, 255);
-  int rightBelt = map(constrain(abs(stickRight), 0, stickRightAbsMax), 0, stickRightAbsMax, 0, 255);
+  int leftBelt = map(constrain(abs(stickLeft), 40, stickLeftAbsMax), 40, stickLeftAbsMax, 0, 255);
+  int rightBelt = map(constrain(abs(stickRight), 40, stickRightAbsMax), 40, stickRightAbsMax, 0, 255);
   
   Serial.print(leftBelt);
   Serial.print(' ');
   Serial.println(rightBelt);
 
-  if (stickLeft > 20) {
+  if (stickLeft > 40) {
     Motor.digitalWrite(BELT_LEFT_FORWARD, HIGH);
     Motor.digitalWrite(BELT_LEFT_BACKWARD, LOW);
   }
-  else if (stickLeft < -20) {
+  else if (stickLeft < -40) {
     Motor.digitalWrite(BELT_LEFT_FORWARD, LOW);
     Motor.digitalWrite(BELT_LEFT_BACKWARD, HIGH);
   } else {
@@ -84,10 +84,10 @@ void loop() {
     Motor.digitalWrite(BELT_LEFT_BACKWARD, LOW);
   }
   
-  if (stickRight > 20) {
+  if (stickRight > 40) {
     Motor.digitalWrite(BELT_RIGHT_FORWARD, HIGH);
     Motor.digitalWrite(BELT_RIGHT_BACKWARD, LOW);
-  } else if (stickRight < -20) {
+  } else if (stickRight < -40) {
     Motor.digitalWrite(BELT_RIGHT_FORWARD, LOW);
     Motor.digitalWrite(BELT_RIGHT_BACKWARD, HIGH);
   } else {
