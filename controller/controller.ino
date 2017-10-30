@@ -1,15 +1,9 @@
-#include <Servo.h>
-#include <SPI.h>
-#include <RF24.h>
-#include <RF24Network.h>
 #include <TrollBot.h>
 
 TrollBot Master(00, 050);
 TrollBot Motor(01, 050);
 
 //Slave pins
-int motorPins[2] = {5, 6};
-int statusPin = 7;
 
 int stickLeftNeutral;
 int stickRightNeutral;
@@ -38,10 +32,6 @@ void setup() {
   pinMode(statusPin, OUTPUT);
 
   Master.setup();
-  //Slave setup
-  Motor.pinMode(motorPins[0], OUTPUT);
-  Motor.pinMode(motorPins[1], OUTPUT);
-
   Motor.pinMode(BELT_RIGHT_FORWARD, OUTPUT);
   Motor.pinMode(BELT_RIGHT_BACKWARD, OUTPUT);
   Motor.pinMode(BELT_RIGHT_PWM, OUTPUT);
