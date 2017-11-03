@@ -60,7 +60,7 @@ void loop() {
 
   statusValue = !statusValue;
   Motor.digitalWrite(STATUS_PIN, statusValue);
-  digitalWrite(STATUS_PIN, HIGH);
+  digitalWrite(STATUS_PIN, statusValue);
 
   int buttonLeft = digitalRead(BUTTON_LEFT_PIN);
   int buttonRight = digitalRead(BUTTON_RIGHT_PIN);
