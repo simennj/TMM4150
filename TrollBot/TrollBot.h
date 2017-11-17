@@ -145,7 +145,7 @@ struct TrollBot {
 *
 *  If there is incoming data intended for another node, network.update() forwards the data. 
 */
-void Loop(int sendToThisAddress = 00) {
+bool Loop(int sendToThisAddress = 00) {
 	network.update();
 	if (network.available()) {
 		RF24NetworkHeader toHeader(sendToThisAddress);
@@ -177,5 +177,7 @@ void Loop(int sendToThisAddress = 00) {
 
 		default: network.read(fromHeader, 0, 0); break;
 		}
+		return true;
 	}
+	return false;
 }
