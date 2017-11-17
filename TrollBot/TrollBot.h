@@ -76,12 +76,12 @@ struct TrollBot {
 	* When this data is received by a node, it is handled by a function which is not a member of this struct. It's
 	* explained further down.
 	*/
-	void digitalWrite(int pin, int mode) {
+	void digitalWrite(uint8_t pin, uint8_t mode) {
 		uint8_t data[3] = { 10,pin,mode };
 		network.write(header, &data, sizeof(data));
 	}
 
-	void analogWrite(int pin, int val) {
+	void analogWrite(uint8_t pin, uint8_t val) {
 		uint8_t data[3] = { 11,pin,val };
 		network.write(header, &data, sizeof(data));
 	}
@@ -92,7 +92,7 @@ struct TrollBot {
 	* which the request was sent to, the value is returend. 
 	* NB! Otherwise a default value of 0 is returned if not specified.
 	*/
-	int digitalRead(int pin, int defaultReturn = 0) {
+	int digitalRead(uint8_t pin, uint8_t defaultReturn = 0) {
 		uint8_t data[3] = { 12,pin,0 };
 		uint16_t receiveData;
 		network.write(header, &data, sizeof(data));
@@ -106,7 +106,7 @@ struct TrollBot {
 			else return defaultReturn;
 	}
 
-	int analogRead(int pin, int defaultReturn = 0) {
+	int analogRead(uint8_t pin, uint8_t defaultReturn = 0) {
 		uint8_t data[3] = { 13,pin,0 };
 		uint16_t receiveData;
 		network.write(header, &data, sizeof(data));
@@ -120,17 +120,17 @@ struct TrollBot {
 			else return defaultReturn;
 	}
 
-	void pinMode(int pin, int mode) {
+	void pinMode(uint8_t pin, uint8_t mode) {
 		uint8_t data[3] = { 14,pin,mode };
 		network.write(header, &data, sizeof(data));
 	}
 
-	void servo_attach(int servoNum, int pin) {
+	void servo_attach(uint8_t servoNum, uint8_t pin) {
 		uint8_t data[3] = { 15,servoNum,pin };
 		network.write(header, &data, sizeof(data));
 	}
 
-	void servo_write(int servoNum, int angle) {
+	void servo_write(uint8_t servoNum, uint8_t angle) {
 		uint8_t data[3] = { 16,servoNum,angle };
 		network.write(header, &data, sizeof(data));
 	}
