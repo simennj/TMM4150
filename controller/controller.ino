@@ -26,7 +26,6 @@ const int BELT_LEFT_BACKWARD = 4;
 const int BELT_LEFT_PWM = 6;
 
 void setup() {
-  Serial.begin(9600);
   stickLeftNeutral = analogRead(A2);
   stickRightNeutral = analogRead(A5);
   stickLeftAbsMax = min(stickLeftNeutral, 1024-stickLeftNeutral);
@@ -36,10 +35,6 @@ void setup() {
   pinMode(BUTTON_RIGHT_PIN, INPUT);
   digitalWrite(BUTTON_LEFT_PIN, HIGH);
   digitalWrite(BUTTON_RIGHT_PIN, HIGH);
-
-  Serial.print(stickLeftAbsMax);
-  Serial.print(' ');
-  Serial.println(stickRightAbsMax);
 
   pinMode(STATUS_PIN, OUTPUT);
 
@@ -74,10 +69,6 @@ void loop() {
   }
 
   servoAngle = constrain(servoAngle, 0, 180);
-  Serial.print(!buttonLeft);
-  Serial.print(' ');
-  Serial.println(!buttonRight);
-  Serial.println(servoAngle);
   Motor.servo_write(1, servoAngle);
 
   int stickLeft = analogRead(A2) - stickLeftNeutral;
@@ -86,14 +77,6 @@ void loop() {
 
   int leftBelt = map(constrain(abs(stickLeft), 40, stickLeftAbsMax), 40, stickLeftAbsMax, 0, 255);
   int rightBelt = map(constrain(abs(stickRight), 40, stickRightAbsMax), 40, stickRightAbsMax, 0, 255);
-  
-  // Serial.print(stickLeft);
-  // Serial.print(' ');
-  // Serial.print(stickRight);
-  // Serial.print(', ');
-  // Serial.print(leftBelt);
-  // Serial.print(' ');
-  // Serial.println(rightBelt);
 
   if (stickLeft > 40) {
     Motor.digitalWrite(BELT_LEFT_FORWARD, HIGH);
