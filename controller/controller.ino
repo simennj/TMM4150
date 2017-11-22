@@ -58,6 +58,7 @@ void setup() {
 void loop() {
   Master.masterLoop();
 
+  digitalWrite(LED_BUILTIN, statusValue);
   statusValue = !statusValue;
   Motor.digitalWrite(STATUS_PIN, statusValue);
   digitalWrite(STATUS_PIN, statusValue);
