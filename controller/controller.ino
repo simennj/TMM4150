@@ -26,8 +26,8 @@ const int BELT_LEFT_BACKWARD = 4;
 const int BELT_LEFT_PWM = 6;
 
 void setup() {
-  stickLeftNeutral = analogRead(A2);
-  stickRightNeutral = analogRead(A5);
+  stickLeftNeutral = analogRead(A1);
+  stickRightNeutral = analogRead(A4);
   stickLeftAbsMax = min(stickLeftNeutral, 1024-stickLeftNeutral);
   stickRightAbsMax = min(stickRightNeutral, 1024-stickRightNeutral);
 
