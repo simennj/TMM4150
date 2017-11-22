@@ -19,7 +19,7 @@ int statusValue;
 
 
 const int BELT_RIGHT_FORWARD = 2;
-const int BELT_RIGHT_BACKWARD = 1;
+const int BELT_RIGHT_BACKWARD = 11;
 const int BELT_RIGHT_PWM = 3;
 const int BELT_LEFT_FORWARD = 5;
 const int BELT_LEFT_BACKWARD = 4;
